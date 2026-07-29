@@ -1,0 +1,27 @@
+# Desktop layer. Add to the requirements.txt you already have.
+
+PySide6>=6.7            # window, widgets, audio playback. Qt, not a browser.
+sounddevice>=0.4.6      # microphone capture (PortAudio)
+llama-cpp-python>=0.3.2 # embeddings + chat, loaded IN-PROCESS. Replaces Ollama.
+
+pyinstaller>=6.6        # packaging only, not a runtime dependency
+
+# --- no longer needed by the app ---
+# openai            was only ever a client for the local Ollama HTTP endpoint
+# requests          same; session_store.embed() no longer makes HTTP calls
+#
+# You can leave them installed (main.py still imports openai) but the packaged
+# app does not use either, and the network guard would refuse them if it did.
+
+# --- already in your tree; the desktop build now depends on these directly ---
+#   soundfile   writes 16 kHz mono WAV as it records
+#   scipy       resample_poly, so ffmpeg is no longer required
+#   numpy
+
+# --- building llama-cpp-python with GPU support ---
+# CPU-only (default):
+#     pip install llama-cpp-python
+# CUDA:
+#     CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python --no-binary llama-cpp-python
+# Apple Silicon (Metal is on by default in the prebuilt wheels):
+#     pip install llama-cpp-python

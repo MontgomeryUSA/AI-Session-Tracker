@@ -27,13 +27,9 @@ The SQLCipher key handling and Ollama calls follow your Phase-04 manual.
 
 import json
 import datetime as dt
-import requests
 import sqlcipher3 as sqlite          # encrypted SQLite
 import sqlite_vec
 
-OLLAMA = "http://localhost:11434"
-EMBED_MODEL = "bge-m3"               # 1024-dim
-CHAT_MODEL  = "gemma4:e2b"
 EMBED_DIM   = 1024
 
 # ----------------------------------------------------------------------------
@@ -97,10 +93,8 @@ def _audit(con, action, ref):
 # 2. embeddings
 # ----------------------------------------------------------------------------
 def embed(text: str):
-    r = requests.post(f"{OLLAMA}/api/embeddings",
-                      json={"model": EMBED_MODEL, "prompt": text}, timeout=120)
-    r.raise_for_status()
-    return r.json()["embedding"]
+    from local_llm import embed as _embed
+    return _embed(text)
 
 
 # ----------------------------------------------------------------------------
